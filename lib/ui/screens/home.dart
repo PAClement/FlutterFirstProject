@@ -2,10 +2,15 @@ import 'package:first_project/ui/screens/add_company.dart';
 import 'package:flutter/material.dart';
 import '../../models/company.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
-  final List<Company> companies = const [];
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final List<Company> _companies = [];
 
   @override
   Widget build(BuildContext context) {
@@ -16,18 +21,27 @@ class Home extends StatelessWidget {
       body: Container(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            final item = companies[index];
+            final item = _companies[index];
 
             return ListTile(
               title: Text(item.name),
             );
           },
-          itemCount: companies.length,
+          itemCount: _companies.length,
         ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => {Navigator.of(context).pushNamed("/addCompany")},
+        onPressed: () async {
+          final Company? company =
+              await Navigator.of(context).pushNamed("/addCompany") as Company?;
+
+          if (company != null) {
+            setState(() {
+              _companies.add(company);
+            });
+          }
+        },
       ),
     );
   }
