@@ -1,4 +1,6 @@
+import 'package:first_project/blocs/company_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/company.dart';
 import '../../models/address.dart';
 
@@ -71,9 +73,10 @@ class AddCompagny extends StatelessWidget {
                 onPressed: () {
                   if (_formKey.currentState!.validate() && address != null) {
                     final String name = _nameController.text;
-
                     final Company company = Company(0, name, address!);
-                    Navigator.of(context).pop(company);
+
+                    context.read<CompanyCubit>().addCompany(company);
+                    Navigator.of(context).pop();
                   }
                 },
                 child: const Text('add new entreprise'),

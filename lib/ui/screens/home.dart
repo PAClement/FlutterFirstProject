@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/company.dart';
+import 'package:first_project/blocs/company_cubit.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -9,39 +11,32 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Company> _companies = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('MyDigitalMap'),
       ),
-      body: Card(
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            final item = _companies[index];
+      body: BlocBuilder<CompanyCubit, List<Company>>(
+        builder: (context, companie) {
+          return ListView.builder(
+            itemCount: companie.length,
+            itemBuilder: (BuildContext context, int index) {
+              final Company company = companie[index];
 
-            return ListTile(
-              title: Text(item.name),
-              subtitle: Text(
-                  "${item.address.street} - ${item.address.postcode} - ${item.address.city}"),
-            );
-          },
-          itemCount: _companies.length,
-        ),
+              return ListTile(
+                title: Text(company.name),
+                subtitle:
+                    Text('${company.address.street}, ${company.address.city}'),
+              );
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () async {
-          final Company? company =
-              await Navigator.of(context).pushNamed("/addCompany") as Company?;
-
-          if (company != null) {
-            setState(() {
-              _companies.add(company);
-            });
-          }
+        onPressed: () {
+          Navigator.of(context).pushNamed("/addCompany");
         },
       ),
     );
