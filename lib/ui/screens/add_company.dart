@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../models/company.dart';
+import '../../models/address.dart';
 
 class AddCompagny extends StatelessWidget {
   AddCompagny({Key? key}) : super(key: key);
 
-  final _textFieldController = TextEditingController();
+  final _nameController = TextEditingController();
+  Address? address;
+
+  final _addrController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
@@ -14,36 +19,64 @@ class AddCompagny extends StatelessWidget {
         title: const Text('Add compagny'),
       ),
       body: Container(
-        margin: EdgeInsets.all(10.0),
+        margin: const EdgeInsets.all(10.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              TextFormField(
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.apartment),
-                  border: OutlineInputBorder(),
-                  labelText: 'Entreprise name',
+              Card(
+                child: TextFormField(
+                  controller: _nameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.apartment),
+                    border: OutlineInputBorder(),
+                    labelText: 'Entreprise name',
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                controller: _textFieldController,
+              ),
+              Card(
+                child: TextFormField(
+                  controller: _addrController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.abc_outlined),
+                    border: OutlineInputBorder(),
+                    labelText: 'Address',
+                  ),
+                  readOnly: true,
+                  onTap: () async {
+                    address = await Navigator.of(context)
+                        .pushNamed("/searchAddr") as Address?;
+
+                    if (address != null) {
+                      _addrController.text =
+                          "${address!.street} - ${address!.postcode} - ${address!.city}";
+                    }
+                  },
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final String name = _textFieldController.text;
+                  if (_formKey.currentState!.validate() && address != null) {
+                    final String name = _nameController.text;
 
-                    final Company company = Company(0, name);
+                    final Company company = Company(0, name, address!);
                     Navigator.of(context).pop(company);
                   }
                 },
-                child: const Text('ADD'),
+                child: const Text('add new entreprise'),
               )
             ],
           ),

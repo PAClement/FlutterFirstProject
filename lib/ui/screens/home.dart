@@ -1,4 +1,3 @@
-import 'package:first_project/ui/screens/add_company.dart';
 import 'package:flutter/material.dart';
 import '../../models/company.dart';
 
@@ -18,13 +17,15 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('MyDigitalMap'),
       ),
-      body: Container(
+      body: Card(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             final item = _companies[index];
 
             return ListTile(
               title: Text(item.name),
+              subtitle: Text(
+                  "${item.address.street} - ${item.address.postcode} - ${item.address.city}"),
             );
           },
           itemCount: _companies.length,
