@@ -1,4 +1,5 @@
-import 'package:first_project/models/address.dart';
+import 'dart:convert';
+import 'address.dart';
 
 class Company {
   final int id;
@@ -6,4 +7,16 @@ class Company {
   final Address address;
 
   const Company(this.id, this.name, this.address);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'address': address.toJson(),
+    };
+  }
+
+  factory Company.fromJson(Map<String, dynamic> json) {
+    return Company(json['id'], json['name'], Address.fromJson(json));
+  }
 }
