@@ -17,6 +17,6 @@ class Company {
   }
 
   factory Company.fromJson(Map<String, dynamic> json) {
-    return Company(json['id'], json['name'], Address.fromJson(json));
+    return Company(json['id'], json['name'], Address.fromJson(json['street']));
   }
 }

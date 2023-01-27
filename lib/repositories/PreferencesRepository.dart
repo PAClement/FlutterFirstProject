@@ -13,6 +13,12 @@ class PreferencesRepository {
   }
 
   Future<List<Company>> loadCompanies() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String> listJson = prefs.getStringList('companies') ?? [];
+    final List<Company> companies = [];
+    for (String json in listJson) {
+      final Map<String, dynamic> map = jsonDecode(json);
+    }
     // A compléter
     return [];
   }
